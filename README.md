@@ -78,7 +78,7 @@ package.json
 ## 🚀 Instalación y ejecución
 
 1) Clonar el repositorio  
-git clone https://github.com/tu-usuario/ecommerce-backend-ii.git  
+git clone https://github.com/joehouse90/ecommerce-backend-ii
 
 2) Instalar dependencias  
 npm install  
