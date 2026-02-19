@@ -1,7 +1,8 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { UserModel } from "../models/user.model.js";
+import { usersService } from "./dependencies.js";
+
 import { createHash, isValidPassword } from "../utils/auth.utils.js";
 
 export const initPassport = ({ jwtSecret }) => {
@@ -12,11 +13,13 @@ export const initPassport = ({ jwtSecret }) => {
       { usernameField: "email", passReqToCallback: true, session: false },
       async (req, email, password, done) => {
         try {
-          const exists = await UserModel.findOne({ email });
+          const exists = await usersService.getByEmail(email);
+
           if (exists) return done(null, false, { message: "Email ya registrado" });
 
           const { first_name, last_name, age, cart } = req.body;
-          const user = await UserModel.create({
+         const user = await usersService.create({
+
             first_name,
             last_name,
             age,
@@ -39,7 +42,8 @@ export const initPassport = ({ jwtSecret }) => {
       { usernameField: "email", session: false },
       async (email, password, done) => {
         try {
-          const user = await UserModel.findOne({ email });
+         const user = await usersService.getByEmail(email);
+
           if (!user) return done(null, false, { message: "Credenciales inválidas" });
           if (!isValidPassword(password, user.password))
             return done(null, false, { message: "Credenciales inválidas" });
@@ -67,7 +71,8 @@ export const initPassport = ({ jwtSecret }) => {
       },
       async (payload, done) => {
         try {
-          const user = await UserModel.findById(payload.uid)
+         const user = await usersService.getById(payload.uid)
+
             .select("-password")
             .lean();
         if (!user) return done(null, false);

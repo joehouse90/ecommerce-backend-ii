@@ -1,17 +1,20 @@
+import "dotenv/config"; // 👈 Carga automática de variables antes de todo
+
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 
 import { initPassport } from "./config/passport.config.js";
 import { sessionsRouter } from "./routes/sessions.router.js";
-
-dotenv.config();
+import { usersRouter } from "./routes/users.router.js";
+import { productsRouter } from "./routes/products.router.js";
+import { cartsRouter } from "./routes/carts.router.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/ecommerce";
+const MONGO_URI =
+  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/ecommerce";
 
 // Middlewares
 app.use(express.json());
@@ -24,7 +27,13 @@ app.use(passport.initialize());
 
 // Rutas
 app.use("/api/sessions", sessionsRouter);
-app.get("/", (req, res) => res.send("Servidor funcionando correctamente 🚀"));
+app.use("/api/users", usersRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+
+app.get("/", (req, res) =>
+  res.send("Servidor funcionando correctamente 🚀")
+);
 
 // Conexión a Mongo y servidor
 mongoose

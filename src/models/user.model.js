@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   cart: { type: mongoose.Schema.Types.ObjectId, ref: "carts", default: null },
   role: { type: String, enum: ["user", "admin"], default: "user" },
+  resetToken: { type: String },
+  resetTokenExpire: { type: Date },
 });
 
 export const UserModel = mongoose.model(userCollection, userSchema);
